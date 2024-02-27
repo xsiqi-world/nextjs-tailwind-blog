@@ -56,8 +56,8 @@ const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
 }
 
 type Source = {
-  value: string,
-  url: string,
+  value: string
+  url: string
   depth: string | number
 }
 
@@ -89,7 +89,7 @@ const TocNav = ({ source }: Props) => {
     return {
       text: raw.value,
       id: raw.url.replace(/#*/, ''),
-      level: raw.depth,
+      level: raw.depth
     }
   })
 
@@ -113,7 +113,7 @@ const TocNav = ({ source }: Props) => {
                   ? 'font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
                   : 'font-normal text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
                 heading.level === 3 && 'pl-4',
-                'mb-3 text-left text-sm transition-colors hover:underline'
+                'mb-3 text-left text-sm transition-colors hover:underline',
               ].join(' ')}
               onClick={(e) => {
                 e.preventDefault()
