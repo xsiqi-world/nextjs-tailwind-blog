@@ -4,7 +4,7 @@
 
 // import clsx from 'clsx';
 // import GithubSlugger from 'github-slugger';
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // eslint-disable-next-line no-unused-vars
 type UseIntersectionObserverType = (setActiveId: (id: string) => void) => void;
@@ -47,9 +47,7 @@ const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
       rootMargin: '0px 0px -70% 0px',
     });
 
-    const headingElements = Array.from(
-      document.querySelectorAll('article h2,h3')
-    );
+    const headingElements = Array.from(document.querySelectorAll('article h2,h3'));
 
     headingElements.forEach((element) => observer.observe(element));
 
@@ -68,7 +66,7 @@ type Props = {
   source: Source[]
 };
 
-const TocNav = ({source}: Props) => {
+const TocNav = ({ source }: Props) => {
   // const { t } = useTranslation(['common']);
 
   // const headingLines = source
@@ -133,6 +131,6 @@ const TocNav = ({source}: Props) => {
       </div>
     </div>
   );
-};
+}
 
-export default TocNav;
+export default TocNav
