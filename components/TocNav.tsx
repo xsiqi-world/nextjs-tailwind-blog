@@ -89,7 +89,7 @@ const TocNav = ({ source }: Props) => {
     return {
       text: raw.value,
       id: raw.url.replace(/#*/, ''),
-      level: raw.depth
+      level: raw.depth,
     }
   })
 
