@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 // ref: https://github.com/ekomenyong/kommy-mdx/blob/main/src/components/TOC.tsx
 
