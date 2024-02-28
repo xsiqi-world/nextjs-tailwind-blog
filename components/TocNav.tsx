@@ -55,7 +55,7 @@ const useIntersectionObserver: UseIntersectionObserverType = (setActiveId) => {
   }, [setActiveId])
 }
 
-type Source = {
+export type Source = {
   value: string
   url: string
   depth: string | number
@@ -67,6 +67,7 @@ type Props = {
 }
 
 const TocNav = ({ source }: Props) => {
+  console.log(source)
   // const { t } = useTranslation(['common'])
 
   // const headingLines = source
@@ -88,7 +89,7 @@ const TocNav = ({ source }: Props) => {
   const headings = source.map((raw) => {
     return {
       text: raw.value,
-      id: raw.url.replace(/#*/, ''),
+      id: raw.url.replace(/#*(.*)-\d/, '$1'),
       level: raw.depth,
     }
   })
