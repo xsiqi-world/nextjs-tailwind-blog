@@ -99,7 +99,7 @@ const TocNav = ({ source }: Props) => {
   useIntersectionObserver(setActiveId)
 
   return (
-    <div className="mt-10">
+    <div className="py-4 xl:py-8">
       <p className="mb-5 text-lg font-semibold text-gray-900 transition-colors dark:text-gray-100">
         TABLE OF CONTENTS
       </p>

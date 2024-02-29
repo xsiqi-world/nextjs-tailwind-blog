@@ -10,7 +10,12 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
-import TocNav, { Source } from '@/components/TocNav'
+import { Source } from '@/components/TocNav'
+import dynamic from "next/dynamic";
+
+const TocNav = dynamic(() => import("@/components/TocNav"), {
+  ssr: false,
+})
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
