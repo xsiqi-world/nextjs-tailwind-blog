@@ -11,9 +11,9 @@ import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
 import { Source } from '@/components/TocNav'
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic'
 
-const TocNav = dynamic(() => import("@/components/TocNav"), {
+const TocNav = dynamic(() => import('@/components/TocNav'), {
   ssr: false,
 })
 
