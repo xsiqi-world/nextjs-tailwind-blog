@@ -28,8 +28,13 @@ const postDateTemplate: Intl.DateTimeFormatOptions = {
   day: 'numeric',
 }
 
+interface BlogExtendBody extends Blog {
+  raw: string
+  code: string
+}
+
 interface LayoutProps {
-  content: CoreContent<Blog>
+  content: CoreContent<BlogExtendBody>
   authorDetails: CoreContent<Authors>[]
   next?: { path: string; title: string }
   prev?: { path: string; title: string }
@@ -37,7 +42,7 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
+  const { filePath, path, slug, date, title, tags, raw } = content
   const basePath = path.split('/')[0]
 
   // 新增目录
@@ -126,7 +131,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 {/*<h2 className="pt-6 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">*/}
                 {/*  目录*/}
                 {/*</h2>*/}
-                <TocNav source={toc} />
+                <TocNav source={toc} raw={raw} />
 
                 {tags && (
                   <div className="py-4 xl:py-8">

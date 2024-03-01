@@ -2,8 +2,8 @@
 
 // ref: https://github.com/ekomenyong/kommy-mdx/blob/main/src/components/TOC.tsx
 
-// import clsx from 'clsx'
-// import GithubSlugger from 'github-slugger'
+import clsx from 'clsx'
+import GithubSlugger from 'github-slugger'
 import { useEffect, useRef, useState } from 'react'
 
 // eslint-disable-next-line no-unused-vars
@@ -64,9 +64,10 @@ export type Source = {
 type Props = {
   // source: string
   source: Source[]
+  raw: string
 }
 
-const TocNav = ({ source }: Props) => {
+const TocNav = ({ source, raw }: Props) => {
   console.log(source)
   // const { t } = useTranslation(['common'])
 
@@ -86,20 +87,34 @@ const TocNav = ({ source }: Props) => {
   //     }
   // })
 
-  const headings = source.map((raw) => {
+  const headingLines = raw.split('\n').filter((line) => line.match(/^###?\s/))
+
+  const headings = headingLines.map((raw) => {
+    const text = raw.replace(/^###*\s/, '')
+    const level = raw.slice(0, 3) === '###' ? 3 : 2
+    const slugger = new GithubSlugger()
+
     return {
-      text: raw.value,
-      id: raw.url.replace(/#*(.*)-\d/, '$1'),
-      level: raw.depth,
+      text,
+      level,
+      id: slugger.slug(text),
     }
   })
+
+  // const headings = source.map((raw) => {
+  //   return {
+  //     text: raw.value,
+  //     id: raw.url.replace(/#*(.*)-\d/, '$1'),
+  //     level: raw.depth,
+  //   }
+  // })
 
   const [activeId, setActiveId] = useState<string>()
 
   useIntersectionObserver(setActiveId)
 
   return (
-    <div className="py-4 xl:py-8">
+    <div className="hidden py-4 xl:block xl:py-8">
       <p className="mb-5 text-lg font-semibold text-gray-900 transition-colors dark:text-gray-100">
         TABLE OF CONTENTS
       </p>
@@ -109,13 +124,13 @@ const TocNav = ({ source }: Props) => {
             <button
               key={index}
               type="button"
-              className={[
+              className={clsx([
                 heading.id === activeId
                   ? 'font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
                   : 'font-normal text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
                 heading.level === 3 && 'pl-4',
                 'mb-3 text-left text-sm transition-colors hover:underline',
-              ].join(' ')}
+              ])}
               onClick={(e) => {
                 e.preventDefault()
                 document.querySelector(`#${heading.id}`)?.scrollIntoView({
