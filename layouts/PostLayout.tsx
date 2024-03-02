@@ -157,7 +157,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 </div>
               )}
             </div>
-            <footer className="xl:self-baseline xl:w-[210px]" ref={tocListenerRef}>
+            <footer className="xl:w-[210px] xl:self-baseline" ref={tocListenerRef}>
               <div className="w-[inherit] divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
                 {/*<h2 className="pt-6 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">*/}
                 {/*  目录*/}
