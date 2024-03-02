@@ -101,14 +101,6 @@ const TocNav = ({ source, raw }: Props) => {
     }
   })
 
-  // const headings = source.map((raw) => {
-  //   return {
-  //     text: raw.value,
-  //     id: raw.url.replace(/#*(.*)-\d/, '$1'),
-  //     level: raw.depth,
-  //   }
-  // })
-
   const [activeId, setActiveId] = useState<string>()
 
   useIntersectionObserver(setActiveId)

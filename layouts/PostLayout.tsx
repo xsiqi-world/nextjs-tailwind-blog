@@ -1,4 +1,6 @@
-import { ReactNode } from 'react'
+'use client'
+
+import { ReactNode, memo, useEffect, useRef, useState } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
@@ -10,12 +12,9 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
-import { Source } from '@/components/TocNav'
-import dynamic from 'next/dynamic'
+import TocNav, { Source } from '@/components/TocNav'
 
-const TocNav = dynamic(() => import('@/components/TocNav'), {
-  ssr: false,
-})
+const TocLine = memo(TocNav)
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -41,6 +40,30 @@ interface LayoutProps {
   children: ReactNode
 }
 
+const useListenerToc = (tocListenerRef) => {
+  const [tocOpen, setTocOpen] = useState(true)
+  useEffect(() => {
+    // 获取目标元素
+    const target = tocListenerRef.current as HTMLDivElement
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // 如果目标元素进入视窗，显示它
+          setTocOpen(true)
+        } else {
+          // 如果目标元素离开视窗，隐藏它
+          setTocOpen(false)
+        }
+      })
+    })
+
+    // 开始观察目标元素
+    observer.observe(target)
+  }, [])
+
+  return tocOpen
+}
+
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
   const { filePath, path, slug, date, title, tags, raw } = content
   const basePath = path.split('/')[0]
@@ -48,6 +71,10 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
   // 新增目录
   // @ts-ignore
   const toc: Source[] = content.toc
+
+  const tocListenerRef = useRef<HTMLDivElement>(null)
+
+  const tocOpen = useListenerToc(tocListenerRef)
 
   // @ts-ignore
   return (
@@ -72,8 +99,8 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </div>
             </div>
           </header>
-          <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
-            <dl className="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
+          <div className="relative grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
+            <dl className="pb-10 pt-6 xl:w-[210px] xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
               <dt className="sr-only">Authors</dt>
               <dd>
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
@@ -108,7 +135,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 </ul>
               </dd>
             </dl>
-            <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:w-[820px] xl:pb-0">
               <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
                 <Link href={discussUrl(path)} rel="nofollow">
@@ -126,12 +153,14 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 </div>
               )}
             </div>
-            <footer>
-              <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
+            <footer className="xl:absolute xl:top-[115px] xl:w-[210px]" ref={tocListenerRef}>
+              <div className="w-[inherit] divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
                 {/*<h2 className="pt-6 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">*/}
                 {/*  目录*/}
                 {/*</h2>*/}
-                <TocNav source={toc} raw={raw} />
+                <div className={tocOpen ? 'relative' : 'fixed top-10 w-[inherit]'}>
+                  <TocLine source={toc} raw={raw} />
+                </div>
 
                 {tags && (
                   <div className="py-4 xl:py-8">
